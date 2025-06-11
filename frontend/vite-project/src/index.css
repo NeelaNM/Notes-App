@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+[data-theme='light']{
+  --bg-color: white;
+  --text-color: black;
+}
+
+[data-theme='dark']{
+  --bg-color: #242424;
+  --text-color: white;
+}
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--text-color);
+  background-color: var(--bg-color)
+}
+
