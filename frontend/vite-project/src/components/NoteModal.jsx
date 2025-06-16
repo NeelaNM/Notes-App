@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuid, v4 } from "uuid";
+import { v4 } from "uuid";
 import axios from "axios";
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import CheckListArea from "./CheckListArea";
@@ -14,10 +14,8 @@ export default function NoteModal() {
     const notesRef = useRef();
     const titleRef = useRef();
     const checklistRef = useRef(null);
-
     const dispatch = useDispatch();
     const selectedNote = useSelector(state => state.selectedNote);
-    // const folderId = useSelector(state => state.selectedFolderId);
 
     const addNote = () => {
         let id = selectedNote?.id;
@@ -25,12 +23,14 @@ export default function NoteModal() {
             id: id || v4(),
             title: titleRef.current?.value,
             description: notesRef.current?.value,
-            // folderId: folderId || 1,
-            //dateModified: Date.now(),
         }
         if(id){
-            axios.put(`/api/notes/${id}`, item)
             dispatch(notesActions.editItem(item, id));
+            try{
+                axios.put(`/api/notes/${id}`, item)
+            }catch(err){
+                console.log("Error in sending request: ", err)
+            }
         }
         if((item.title || item.description) && !id) {
             axios.post('/api/notes', item)
@@ -38,7 +38,6 @@ export default function NoteModal() {
         }
         dispatch(notesActions.toggleModal(false))
         dispatch(notesActions.setSelectedNote({}))
-        // dispatch(notesActions.setFolderId(null));
     }
 
     const onCheckListClick = () => {
@@ -64,7 +63,7 @@ export default function NoteModal() {
 
 
     return(
-        <dialog className='h-100 w-100 ml-auto mr-auto p-5 rounded-xl flex flex-col gap-2.5'>
+        <dialog className='h-100 w-100 ml-auto mr-auto p-5 rounded-xl flex flex-col gap-2.5 backdrop-blur-3xl'>
             <input
                 type='text'
                 placeholder='Title'

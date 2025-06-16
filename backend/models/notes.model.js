@@ -9,7 +9,7 @@ const notesSchema = mongoose.Schema({
         type: String
     },
     description: {
-        type: String,
+        type: mongoose.Schema.Types.Mixed,
         required: true,
     }
 }, {

@@ -1,5 +1,5 @@
 //import { deleteItem, toggleModal, setSelectedNote, setPinnedNotes } from '../actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ export default function NoteCard({ title, description, id, dateModified }) {
 
     const deleteNote = async (e, id) => {
         e.stopPropagation();
-        const res = axios.delete(`/api/notes/${id}`);
+        await axios.delete(`/api/notes/${id}`);
         dispatch(notesActions.deleteItem(id))
     }
 
@@ -76,9 +76,8 @@ export default function NoteCard({ title, description, id, dateModified }) {
                 </h4>
                 {Array.isArray(description) ? displayNoteAsList() : trimDescription(description)}
             </div>
-            <div
-                className='text-xs font-extralight mt-auto'>
-                {new Date(dateModified).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            <div className='text-xs font-extralight mt-auto'>
+                {new Date(dateModified).toISOString()}
                 </div>
         </div>
     )

@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef, useImperativeHandle } from 'react';
-import { v4 as uuid, v4 } from "uuid";
+import { v4 } from "uuid";
 import { useDispatch, useSelector } from 'react-redux';
 import { notesActions } from '../store';
+import axios from 'axios';
 
 export default function CheckListArea({ id = '', title, description = null, ref }) {
 
@@ -38,9 +39,15 @@ export default function CheckListArea({ id = '', title, description = null, ref 
                     id: selectedNote?.id || v4(),
                     title: title || selectedNote?.title,
                     description: taskItems,
-                    dateModified: Date.now(),
                 }
-                id ? dispatch(notesActions.editItem(item, id)) : ((item.description.length > 0 || title) && dispatch(notesActions.addItem(item)))
+                if(id){
+                    axios.put('/api/notes', item)
+                    dispatch(notesActions.editItem(item, id))
+                }
+                else if(item.description.length > 0 || title){ 
+                    axios.post('/api/notes', item); 
+                    dispatch(notesActions.addItem(item))
+                }
                 dispatch(notesActions.toggleModal(false))
                 dispatch(notesActions.setSelectedNote({}))
             }
