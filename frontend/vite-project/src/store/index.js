@@ -9,6 +9,7 @@ const initialState = {
     isPinned: false,
     pinnedNotes: [],
     searchTerm: '',
+    isLoggedIn: false,
 };
 
 const notesSlice = createSlice({
@@ -46,6 +47,9 @@ const notesSlice = createSlice({
         },
         setSearchTerm(state, action){
             state.searchTerm = action.payload;
+        },
+        setIsLoggedIn(state, action){
+            state.isLoggedIn = action.payload;
         }
     }
 })

@@ -84,7 +84,7 @@ export default function NoteModal() {
                     ref={checklistRef}
                 />
                 : textArea}
-            <ButtonSave onSave={handleSave} />
+            <ButtonSave onSave={handleSave} >Save</ButtonSave>
         </dialog>
     )
 }

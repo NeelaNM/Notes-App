@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-
+import axios from 'axios';
 import NoteCard from "./NoteCard";
 import NoteModal from "./NoteModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import SearchField from './SearchField';
 import { useState, useEffect } from 'react';
 
 export default function NotesSection() {
-
     const [filteredNotes, setFilteredNotes] = useState([]);
 
     let notes = useSelector(state => state.items);
@@ -16,19 +15,37 @@ export default function NotesSection() {
     const pinnedNotes = useSelector(state => state.pinnedNotes);
     const searchTerm = useSelector(state => state.searchTerm);
 
-    notes = pinnedNotes.length > 0 ? notes.filter(item => !(pinnedNotes.map(item => item.id)).includes(item.id)) : notes;
-        
     const dispatch = useDispatch();
-    
-    const createNewNote = () => {
-        dispatch(notesActions.toggleModal(true));
+
+    const fetchNotes = async () => {
+    const { data: notes}  = await axios.get("/api/notes");
+    notes.data.forEach(item => {
+        const note =  {
+        id: item._id,
+        title: item.title || '',
+        description: item.description,
+        dateModified: item.updatedAt || item.createdAt,
+        }
+        dispatch(notesActions.addItem(note))
+    })
     }
+
+    useEffect(()=>{
+        fetchNotes();
+    }, [])
+
+    notes = pinnedNotes.length > 0 ? notes.filter(item => !(pinnedNotes.map(item => item.id)).includes(item.id)) : notes;
 
     useEffect(() => {
         const temp = notes.filter(item => item.title?.toLowerCase().includes(searchTerm) || item.description?.toLowerCase().includes(searchTerm));
         setFilteredNotes(temp);
         console.log(temp)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, isOpen])
+
+    const createNewNote = () => {
+        dispatch(notesActions.toggleModal(true));
+    }
 
     return(
         <div className="mt-3">
