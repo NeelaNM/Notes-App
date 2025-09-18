@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 import axios from "axios";
+import Dialog from '@mui/material/Dialog';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import CheckListArea from "./CheckListArea";
 import ButtonSave from "./ButtonSave";
@@ -63,7 +64,22 @@ export default function NoteModal() {
 
 
     return(
-        <dialog className='h-100 w-100 ml-auto mr-auto p-5 rounded-xl flex flex-col gap-2.5 backdrop-blur-3xl'>
+        <Dialog
+            open={true}
+            onClose={() => dispatch(notesActions.toggleModal(false))}
+            BackdropProps={{
+                sx: {
+                backdropFilter: 'blur(2px)',
+                },
+            }}
+            PaperProps={{
+                sx: {
+                borderRadius: 4,
+                padding: 3,
+                width: '50%',
+                },
+            }}
+        >
             <input
                 type='text'
                 placeholder='Title'
@@ -74,7 +90,10 @@ export default function NoteModal() {
             <ChecklistIcon
                 onClick={onCheckListClick}
                 color={isCheckList ? "primary" : ''}
-                className="bg-black"
+                sx={{
+                    marginTop: '10px',
+                    marginBottom: '10px',
+                }}
             />
             {(isCheckList || Array.isArray(selectedNote?.description)) ?
                 <CheckListArea
@@ -85,6 +104,6 @@ export default function NoteModal() {
                 />
                 : textArea}
             <ButtonSave onSave={handleSave} >Save</ButtonSave>
-        </dialog>
+        </Dialog>
     )
 }

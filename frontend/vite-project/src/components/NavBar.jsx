@@ -10,11 +10,11 @@ import { notesActions } from '../store';
 export default function NavBar() {
     const { theme, toggleTheme } = useTheme();
     const dispatch = useDispatch();
-    const isListView = false;
+    const isListView = useSelector(state => state.isListView);
     const isLoggedIn = useSelector(state => state.isLoggedIn)
 
     const handleViewChange = () => {
-        //dispatch(toggleView());
+        dispatch(notesActions.toggleView());
     }
 
     const handleLogout = () => {

@@ -50,6 +50,12 @@ const notesSlice = createSlice({
         },
         setIsLoggedIn(state, action){
             state.isLoggedIn = action.payload;
+        },
+        clearData(state){
+            state.items = []
+        },
+        toggleView(state){
+            state.isListView = !state.isListView
         }
     }
 })

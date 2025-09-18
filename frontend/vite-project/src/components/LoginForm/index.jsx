@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import NavBar from '../NavBar';
 import NotesSection from '../NotesSection';
 import InputForm from '../InputForm';
-import SideBarWrapper from '../SideBarWrapper'
 import { notesActions } from '../../store';
 
 function LoginForm() {
@@ -36,10 +35,7 @@ function LoginForm() {
         /> :
         <> 
           <NavBar />
-          <div className='flex justify-items-start gap-5 h-screen'>
-            <SideBarWrapper />
-            <NotesSection />
-          </div> 
+          <NotesSection />
         </>
       }     
      </>
