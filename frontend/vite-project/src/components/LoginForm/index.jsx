@@ -7,18 +7,18 @@ import { notesActions } from '../../store';
 
 function LoginForm() {
 
-  const [isShowLoginForm, setisShowLoginForm] = useState(true);
+  const [isShowLoginForm, setIsShowLoginForm] = useState(true);
   const isLoggedIn = useSelector(state => state.isLoggedIn);
   const dispatch = useDispatch();
 
   const onSignUp = () => {
-    setisShowLoginForm(prev => !prev)
+    setIsShowLoginForm(prev => !prev)
   }
 
   const onNext = () => {
     if(!isShowLoginForm){
       console.log('Account created! Now Login to your account')
-      setisShowLoginForm(true)
+      setIsShowLoginForm(true)
     } else{
       console.log('Sign in successful')
       dispatch(notesActions.setIsLoggedIn(true))

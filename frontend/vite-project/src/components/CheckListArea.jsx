@@ -39,6 +39,7 @@ export default function CheckListArea({ id = '', title, description = null, ref 
                     id: selectedNote?.id || v4(),
                     title: title || selectedNote?.title,
                     description: taskItems,
+                    isPinned: selectedNote?.isPinned || false,
                 }
                 if(id){
                     axios.put('/api/notes', item)

@@ -10,6 +10,7 @@ import ListView from './NotesView/ListView';
 
 export default function NotesSection() {
     const [filteredNotes, setFilteredNotes] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     let notes = useSelector(state => state.items);
     const isOpen = useSelector(state => state.isOpen);
@@ -21,6 +22,7 @@ export default function NotesSection() {
 
     const fetchNotes = async () => {
         try{
+            setIsLoading(true);
             const { data: notes}  = await axios.get("/api/notes");
             notes.data.forEach(item => {
                 const note =  {
@@ -28,9 +30,11 @@ export default function NotesSection() {
                 title: item.title || '',
                 description: item.description,
                 dateModified: item.updatedAt || item.createdAt,
+                isPinned: item.isPinned,
                 }
                 dispatch(notesActions.addItem(note))
             })
+            setIsLoading(false);
         }catch(err){
             console.log('Erro in fetching: ', err)
         }
@@ -72,15 +76,18 @@ export default function NotesSection() {
                 <SearchField />
             </div>
            {isOpen && <NoteModal />}
+           {isLoading && <p>LOADING .........</p> }
             {(pinnedNotes.length > 0 && !searchTerm) && <>
                 <h2 className='font-extrabold mt-2.5 pl-1.5 border-b-2'>Pinned Notes </h2>
                 <div className='grid grid-cols-3 gap-10'>
-                 {pinnedNotes.map(({id, description, title}) => 
+                 {pinnedNotes.map(({id, description, title, dateModified, isPinned}) => 
                     <NoteCard 
                         title={title} 
                         description={description} 
                         id={id}
                         key={id}
+                        dateModified={dateModified}
+                        isPinned={isPinned}
                     />)
                   }
                 </div>
@@ -89,13 +96,14 @@ export default function NotesSection() {
             }
             {!isListView ? 
             <div className='grid grid-cols-3 gap-10 mt-10'>
-                    {(!searchTerm ? notes : filteredNotes).map(({id, description, title, dateModified}) => 
+                    {(!searchTerm ? notes : filteredNotes).map(({id, description, title, dateModified, isPinned}) => 
                     <NoteCard 
                         title={title} 
                         description={description} 
                         id={id}
                         key={id}
-                        dateModified={dateModified}    
+                        dateModified={dateModified}  
+                        isPinned={isPinned}  
                     />)
                     }
             </div> :

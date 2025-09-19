@@ -26,10 +26,25 @@ const useNoteActions = () => {
         dispatch(notesActions.deleteItem(id))
     }
 
-    const pinNote = (event, id, title, description, dateModified) => {
+    const pinNote = (event, id, title, description, dateModified, isPinned) => {
         event.stopPropagation();
         dispatch(notesActions.togglePin());
-        dispatch(notesActions.setPinnedNotes({id, title, description, dateModified}))
+        dispatch(notesActions.setPinnedNotes({id, title, description, dateModified, isPinned}))
+        const item = {
+            id,
+            title,
+            description,
+            dateModified,
+            isPinned: !isPinned,
+        }
+        if(id){
+            dispatch(notesActions.editItem(item, id));
+            try{
+                axios.put(`/api/notes/${id}`, item)
+            }catch(err){
+                console.log("Error in sending request: ", err)
+            }
+        }
     }
 
     const displayNoteAsList = (description) => <div>

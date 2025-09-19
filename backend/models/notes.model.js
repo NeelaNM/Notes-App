@@ -11,6 +11,10 @@ const notesSchema = mongoose.Schema({
     description: {
         type: mongoose.Schema.Types.Mixed,
         required: true,
+    },
+    isPinned:{
+        type: Boolean,
+        required: true,
     }
 }, {
     timestamps: true,

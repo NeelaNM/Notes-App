@@ -24,6 +24,7 @@ export default function NoteModal() {
             id: id || v4(),
             title: titleRef.current?.value,
             description: notesRef.current?.value,
+            isPinned: false,
         }
         if(id){
             dispatch(notesActions.editItem(item, id));
