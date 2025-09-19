@@ -20,6 +20,9 @@ const useNoteActions = () => {
         dispatch(notesActions.toggleModal(true));
     }
 
+    const createNewNote = () => {
+        dispatch(notesActions.toggleModal(true));
+    }
     const deleteNote = async (e, id) => {
         e.stopPropagation();
         await axios.delete(`/api/notes/${id}`);
@@ -64,6 +67,7 @@ const useNoteActions = () => {
     return {
         trimDescription,
         handleNoteSelect,
+        createNewNote,
         deleteNote,
         pinNote,
         displayNoteAsList

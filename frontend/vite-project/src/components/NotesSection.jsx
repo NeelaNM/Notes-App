@@ -2,11 +2,13 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import NoteCard from "./NoteCard";
 import NoteModal from "./NoteModal";
+import useNoteActions from '../hooks/useNoteActions'
 import { useDispatch, useSelector } from "react-redux";
 import { notesActions } from '../store';
 import SearchField from './SearchField';
 import { useState, useEffect } from 'react';
 import ListView from './NotesView/ListView';
+import GridView from './NotesView/GridView';
 
 export default function NotesSection() {
     const [filteredNotes, setFilteredNotes] = useState([]);
@@ -19,11 +21,13 @@ export default function NotesSection() {
     const isListView = useSelector(state => state.isListView);
 
     const dispatch = useDispatch();
+    const {createNewNote} = useNoteActions();
 
     const fetchNotes = async () => {
         try{
             setIsLoading(true);
             const { data: notes}  = await axios.get("/api/notes");
+            dispatch(notesActions.setPinnedNotes(notes.data.filter(item => item.isPinned)))
             notes.data.forEach(item => {
                 const note =  {
                 id: item._id,
@@ -65,35 +69,15 @@ export default function NotesSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchTerm, isOpen])
 
-    const createNewNote = () => {
-        dispatch(notesActions.toggleModal(true));
-    }
-
     return(
         <div className="mt-3 ml-10 w-5/6">
             <div className='flex justify-between items-center'>
                 <Button variant='outlined' onClick={createNewNote}>+ Create new note</Button>
                 <SearchField />
             </div>
-           {isOpen && <NoteModal />}
-           {isLoading && <p>LOADING .........</p> }
-            {(pinnedNotes.length > 0 && !searchTerm) && <>
-                <h2 className='font-extrabold mt-2.5 pl-1.5 border-b-2'>Pinned Notes </h2>
-                <div className='grid grid-cols-3 gap-10'>
-                 {pinnedNotes.map(({id, description, title, dateModified, isPinned}) => 
-                    <NoteCard 
-                        title={title} 
-                        description={description} 
-                        id={id}
-                        key={id}
-                        dateModified={dateModified}
-                        isPinned={isPinned}
-                    />)
-                  }
-                </div>
-                <h2 className='font-extrabold mt-2.5 pl-1.5 border-b-2'>Others</h2>
-                </>
-            }
+            {isOpen && <NoteModal />}
+            {isLoading && <p>LOADING .........</p> }
+            {(pinnedNotes.length > 0 && !searchTerm) && <GridView />}
             {!isListView ? 
             <div className='grid grid-cols-3 gap-10 mt-10'>
                     {(!searchTerm ? notes : filteredNotes).map(({id, description, title, dateModified, isPinned}) => 

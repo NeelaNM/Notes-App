@@ -24,7 +24,12 @@ export default function NoteModal() {
             id: id || v4(),
             title: titleRef.current?.value,
             description: notesRef.current?.value,
-            isPinned: false,
+            dateModified: Date.now(),
+            isPinned: selectedNote?.isPinned || false,
+        }
+
+        if(item.isPinned){
+            dispatch(notesActions.setPinnedNotes(item))
         }
         if(id){
             dispatch(notesActions.editItem(item, id));
